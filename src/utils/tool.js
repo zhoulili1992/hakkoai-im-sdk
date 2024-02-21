@@ -1,5 +1,5 @@
 import Dayjs from 'dayjs'
-import i18n from '@/language'
+import i18n from '../language'
 
 // 判断当前日期是否处在本周内
 function sameWeek(past) {

@@ -11,7 +11,7 @@ import {
   resetMessageLast,
   formatMessages,
   businessMessageField,
-} from "@/utils/message-handle.js";
+} from "./message-handle.js";
 
 class ImSdk {
   constructor(configInfo) {

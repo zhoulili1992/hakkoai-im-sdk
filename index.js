@@ -1,2 +1,2 @@
-import imSdk from '@/utils/imSdk.js';
-export { imSdk };
+import ImSdk from './src/utils/imSdk';
+export { ImSdk };

@@ -1,4 +1,4 @@
-import { dateFormat } from "@/utils/tool.js";
+import { dateFormat } from "./tool";
 
 /* 根据消息类型获取文本内容
  * @param {*} message 当前消息
@@ -146,9 +146,7 @@ function formatMessages(messages, hasMoreHistory) {
     }
     // console.log("message.time====", message.time);
     // 格式化消息 业务
-    if (message.isFromMe === false) {
-      businessMessageField(message);
-    }
+    businessMessageField(message);
   });
 }
 
@@ -165,6 +163,7 @@ function businessMessageField(message) {
   message.linkContent = extContent?.link_content;
   message.chatTitle = extContent?.chat_title;
   message.audioText = extContent?.audio_text;
+  message.text = getMessageText(message);
 }
 
 function resetMessageState(message) {
