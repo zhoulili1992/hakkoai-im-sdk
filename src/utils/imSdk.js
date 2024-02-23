@@ -101,6 +101,7 @@ class ImSdk {
   async createConversation(participants) {
     console.log("%c createConversation", "color:red",participants);
     this.FRIEND_ID = participants;
+    this.cursor = null;
     /* 如果之前没有对话过，需要先创建会话 */
     this.conversation = (
       await this.instance.createConversation({ participants: [participants] })
