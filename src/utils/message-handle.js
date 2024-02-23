@@ -164,6 +164,7 @@ function businessMessageField(message) {
   message.chatTitle = extContent?.chat_title;
   message.audioText = extContent?.audio_text;
   message.text = getMessageText(message);
+  // console.log("businessMessageField====", message.text);
 }
 
 function resetMessageState(message) {

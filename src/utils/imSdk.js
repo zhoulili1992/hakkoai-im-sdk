@@ -17,7 +17,6 @@ class ImSdk {
   constructor(configInfo) {
     this.APP_ID = configInfo.appId; // 替换为项目 AppId
     this.USER_ID = configInfo.userId;
-    this.FRIEND_ID = configInfo.friendId;
     this.DEVICE_ID = configInfo.deviceId;
     this.API_DOMAIN = configInfo.apiDomain;//"https://imapi.volcvideo.com";
     this.FRONTIER_DOMAIN = configInfo.frontierDomain; //"wss://frontier-sinftob.ivolces.com/ws/v2";
@@ -26,6 +25,7 @@ class ImSdk {
     this.conversation = null;
     this.hasMoreHistory = true;
     this.cursor = null;
+    this.FRIEND_ID = "";
     this.getIMTokenFunc = configInfo.getIMTokenFunc;
   }
 
@@ -100,6 +100,7 @@ class ImSdk {
    */
   async createConversation(participants) {
     console.log("%c createConversation", "color:red",participants);
+    this.FRIEND_ID = participants;
     /* 如果之前没有对话过，需要先创建会话 */
     this.conversation = (
       await this.instance.createConversation({ participants: [participants] })
