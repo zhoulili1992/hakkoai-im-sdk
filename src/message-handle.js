@@ -96,9 +96,9 @@ function calculateWidth(duration) {
  * @param {*} message 当前消息
  * @param {*} prevMessage  上一条消息
  */
-function whetherShowMessageTime(message, prevMessage) {
+function whetherShowMessageTime(message, prevMessage,language) {
   if (!prevMessage) {
-    return dateFormat(message?.createdAt.valueOf());
+    return dateFormat(message?.createdAt.valueOf(),language);
   }
   const timeDifference = Math.abs(
     prevMessage?.createdAt.valueOf() - message?.createdAt.valueOf()
@@ -108,7 +108,7 @@ function whetherShowMessageTime(message, prevMessage) {
   if (timeDifferenceInMinutes > 3) {
     // 3分钟之内不显示时间
     // 如果时间差大于3分钟，就在当前消息的后面加上时间显示
-    return dateFormat(message?.createdAt.valueOf());
+    return dateFormat(message?.createdAt.valueOf(),language);
   } else {
     return "";
   }
@@ -128,18 +128,18 @@ function resetMessageLast(messages) {
  * 格式化历史信息显示 (是否当前用户发送的  消息显示时间与否)
  * @param {*} messages 消息列表
  */
-function formatMessages(messages, hasMoreHistory) {
+function formatMessages(messages, hasMoreHistory, language) {
   if (messages.length === 0) return;
   messages.forEach((message, index) => {
     message.isLast = false;
     if (index >= 1) {
       const prevMessage = messages[index - 1];
-      message.time = whetherShowMessageTime(message, prevMessage);
+      message.time = whetherShowMessageTime(message, prevMessage, language);
     }
 
     // 第一条消息显示时间
     if (hasMoreHistory === false && index === 0) {
-      message.time = dateFormat(message?.createdAt.valueOf());
+      message.time = dateFormat(message?.createdAt.valueOf(), language);
     }
     if (index === messages.length - 1 && message.isFromMe === false) {
       message.isLast = true;

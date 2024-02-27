@@ -1,2 +1,2 @@
-import ImSdk from './src/utils/imSdk';
+import ImSdk from './src/imSdk';
 export { ImSdk };

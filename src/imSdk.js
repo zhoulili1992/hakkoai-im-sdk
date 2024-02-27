@@ -18,14 +18,20 @@ class ImSdk {
     this.APP_ID = configInfo.appId; // 替换为项目 AppId
     this.USER_ID = configInfo.userId;
     this.DEVICE_ID = configInfo.deviceId;
-    this.API_DOMAIN = configInfo.apiDomain;//"https://imapi.volcvideo.com";
-    this.FRONTIER_DOMAIN = configInfo.frontierDomain; //"wss://frontier-sinftob.ivolces.com/ws/v2";
+    // 默认是国内的地址
+    this.API_DOMAIN = "https://imapi.volcvideo.com";
+    this.FRONTIER_DOMAIN = "wss://frontier-sinftob.ivolces.com/ws/v2";
+    if(configInfo.appArea !== "zh") { // 海外的sdk地址
+      this.API_DOMAIN = "https://imapi.bytepluses.com";
+      this.FRONTIER_DOMAIN = "wss://frontier-myatob.byteoversea.com/ws/v2";
+    }
     this.MESSAGES = configInfo.messages;
     this.instance = null;
     this.conversation = null;
     this.hasMoreHistory = true;
     this.cursor = null;
     this.FRIEND_ID = "";
+    this.language = configInfo.language;
     this.getIMTokenFunc = configInfo.getIMTokenFunc;
   }
 
@@ -292,7 +298,7 @@ class ImSdk {
          // 将新获取的消息添加到现有消息列表的前面
          this.MESSAGES.unshift(...response.messages);
          // 格式化消息
-         formatMessages(this.MESSAGES, this.hasMoreHistory);
+         formatMessages(this.MESSAGES, this.hasMoreHistory, this.language);
          console.log(
            "%c拉到历史消息了 res.messages",
            "color: blue",
@@ -337,7 +343,7 @@ class ImSdk {
     message.conversationShortId === this.conversation.shortId);
     if(!flag) return;
     const prevMessage = this.MESSAGES[this.MESSAGES.length - 1];
-    message.time = whetherShowMessageTime(message, prevMessage);
+    message.time = whetherShowMessageTime(message, prevMessage, this.language);
     businessMessageField(message);
     const index = this.MESSAGES.findIndex((m) =>
       m.serverId
