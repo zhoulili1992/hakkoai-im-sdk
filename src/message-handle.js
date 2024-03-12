@@ -4,50 +4,70 @@ import { dateFormat } from "./tool";
  * @param {*} message 当前消息
  */
 function getMessageText(message) {
-  if(!message.content) return;
-  let msgContent = JSON.parse(message.content);
+  let text = "";
+  if (message.msgType === messageType.MESSASG_TYPE_TEXT) {
+    // 文本消息
+    text = JSON.parse(message?.content)?.text;
+  } else if (message.msgType === messageType.MESSASG_TYPE_AUDIO) {
+    // 语音消息
+    text =
+      message.ext["mc:ext_json"] &&
+      JSON.parse(message.ext["mc:ext_json"]).audio_text;
+  }
+  // console.log("getMessageText", text);
+  return text;
+}
+
+const messageType = Object.freeze({
+  MESSASG_TYPE_TEXT: "text", // 文本消息
+  MESSASG_TYPE_AUDIO: "audio", // 语音消息
+  MESSASG_TYPE_IMAGE: "image", // 图片消息
+  MESSASG_TYPE_VIDEO: "video", // 视频消息
+  MESSASG_TYPE_UNKNOWN: "unknown", //未知消息
+});
+
+/* 返回消息类型
+ * @param {*} message 当前消息
+ */
+function getMessageType(message) {
+  let msgType = messageType.MESSASG_TYPE_UNKNOWN;
   if (message.type === 10001) {
     // 文本消息
-    return msgContent.text;
-  } else if (message.type === 10012) { // 自定义的多媒体消息
-    let text = "";
-    if(msgContent.CustomMsgType === 10006) { // 语音消息
-      if (
-        message.ext["mc:ext_json"] &&
-        JSON.parse(message.ext["mc:ext_json"]).audio_text
-      ) {
-        text = JSON.parse(message.ext["mc:ext_json"]).audio_text;
-      }
-    } 
-    return text;
-  } else {
-    return "";
+    msgType = messageType.MESSASG_TYPE_TEXT;
+  } else if (message.type === 10012) {
+    // 自定义的多媒体消息
+    const msgContent = JSON.parse(message?.content);
+    if (msgContent.CustomMsgType === 10006) {
+      // 语音消息
+      msgType = messageType.MESSASG_TYPE_AUDIO;
+    }
   }
+  // console.log("getMessageType", msgType);
+  return msgType;
 }
 
 /* 根据消息类型获取语音内容
  * @param {*} message 当前消息
  */
 function getMessageAudio(message) {
+  if (message.msgType !== messageType.MESSASG_TYPE_AUDIO) return;
   const audio = {};
-  if (message.type === 10006) {
+  if (message.msgType === messageType.MESSASG_TYPE_AUDIO) {
     // 语音消息
     const extContent = JSON.parse(message.content);
-    audio.id =
-      extContent.__files.media?.ext["s:file_ext_key_source_app_id"] || "";
-    const duration =
-      extContent.__files.media?.ext["s:file_ext_key_audio_duration"];
+    const data = JSON.parse(extContent.Data);
+    audio.id = data.__files.media?.ext["s:file_ext_key_source_app_id"] || "";
+    const duration = data.__files.media?.ext["s:file_ext_key_audio_duration"];
     audio.duration = duration;
 
     audio.formatDuration = formatDuration(duration);
     audio.width = calculateWidth(duration);
-    audio.url = extContent.__files.media?.remoteURL;
+    audio.url = data.__files.media?.remoteURL;
     // 语音消息
     if (message.isFromMe) {
-      audio.name = extContent.__files.media.ext["s:file_ext_key_vid"] || "";
+      audio.name = data.__files.media.ext["s:file_ext_key_vid"] || "";
     } else {
-      audio.name =
-        extContent.__files.media.ext["s:file_ext_key_file_name"] || "";
+      audio.name = data.__files.media.ext["s:file_ext_key_file_name"] || "";
       audio.audioText = JSON.parse(message.ext["mc:ext_json"]).audio_text;
     }
   }
@@ -152,19 +172,22 @@ function formatMessages(messages, hasMoreHistory, language) {
 
 // 格式化业务字段 方便使用
 function businessMessageField(message) {
-  const extContent = message.ext["mc:ext_json"] && JSON.parse(message?.ext["mc:ext_json"]);
-  if (!extContent) return;
-  message.subjectRecommendsList = extContent?.subject_recommends || [];
+  message.msgType = getMessageType(message); // 消息的类型
+  message.text = getMessageText(message);
+  message.creatTime = dateFormat(message?.createdAt.valueOf());
   message.likeType = "0";
   if (message.property.like && message.property.like.length > 0) {
     message.likeType = message.property.like[0].value;
   }
-  message.messageType = extContent?.message_type;
+  message.audio = getMessageAudio(message);
+  const extContent =
+    message.ext["mc:ext_json"] && JSON.parse(message?.ext["mc:ext_json"]);
+  if (!extContent) return;
+  message.subjectRecommendsList = extContent?.subject_recommends || [];
+  message.messageType = extContent?.message_type; // 区分主动推荐还是用户聊天
   message.linkContent = extContent?.link_content;
   message.chatTitle = extContent?.chat_title;
-  message.audioText = extContent?.audio_text;
-  message.text = getMessageText(message);
-  // console.log("businessMessageField====", message.text);
+  // console.log("message", message);
 }
 
 function resetMessageState(message) {
@@ -199,4 +222,6 @@ export {
   getMessageAudio,
   businessMessageField,
   resetMessageState,
+  getMessageType,
+  messageType,
 };

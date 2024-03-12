@@ -21,7 +21,7 @@ class ImSdk {
     // 默认是国内的地址
     this.API_DOMAIN = "https://imapi.volcvideo.com";
     this.FRONTIER_DOMAIN = "wss://frontier-sinftob.ivolces.com/ws/v2";
-    if(configInfo.appArea !== "zh") { // 海外的sdk地址
+    if(configInfo.appArea !== "zh" && configInfo.appArea !== "cn") { // 海外的sdk地址
       this.API_DOMAIN = "https://imapi.bytepluses.com";
       this.FRONTIER_DOMAIN = "wss://frontier-myatob.byteoversea.com/ws/v2";
     }

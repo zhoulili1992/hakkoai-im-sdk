@@ -1,2 +1,3 @@
 import ImSdk from './src/imSdk';
-export { ImSdk };
+import { messageType } from './src/message-handle.js';
+export { ImSdk, messageType };
