@@ -8,4 +8,5 @@
 - appArea兼容
 
 #### v1.0.2
+- 增加generation_source字段
   

@@ -187,6 +187,7 @@ function businessMessageField(message) {
   message.messageType = extContent?.message_type; // 区分主动推荐还是用户聊天
   message.linkContent = extContent?.link_content;
   message.chatTitle = extContent?.chat_title;
+  message.generationSource = extContent?.generation_source; //
   // console.log("message", message);
 }
 
