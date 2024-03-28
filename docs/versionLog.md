@@ -10,3 +10,9 @@
 #### v1.0.2
 - 增加generation_source字段
   
+#### v1.0.3
+- 
+
+#### v1.0.4
+- 开放 formatMessages方法
+- 去掉某些log

@@ -90,7 +90,7 @@ function dateFormat(value,language) {
     }else if(language === "ja") {
         time = jaTime;
     }
-    console.log('language===',language)
+    // console.log('language===',language)
     let date = new Date(value);
     let y = date.getFullYear();
     let MM = date.getMonth() + 1;

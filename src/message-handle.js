@@ -71,7 +71,7 @@ function getMessageAudio(message) {
       audio.audioText = JSON.parse(message.ext["mc:ext_json"]).audio_text;
     }
   }
-  console.log("getMessageAudio audio", message, audio);
+  // console.log("getMessageAudio audio", message, audio);
   return audio;
 }
 
