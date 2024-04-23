@@ -128,7 +128,28 @@ function dateFormat(value,language) {
 
 }
   
+  function parseJsonIfPossible(data) {
+    try {
+      if (typeof data === 'string') {
+        // 如果 data 是字符串，则解析
+        const parsed = JSON.parse(data);
+        if (typeof parsed === 'object' && parsed !== null) {
+            return parsed;
+          }
+        return parsed;
+      } else {
+        // 如果 data 已经是对象，则直接返回
+        return data;
+      }
+    } catch (e) {
+      // 如果解析失败，可能是已经是对象或者不是有效的 JSON 字符串
+      console.log('解析成功',e)
+      return data;
+    }
+  }
+  
 export {
     dateFormat,
     formatTimestamp,
+    parseJsonIfPossible
 }

@@ -16,3 +16,7 @@
 #### v1.0.4
 - 开放 formatMessages方法
 - 去掉某些log
+
+#### v1.0.5
+- 增加parseJsonIfPossible方法(兼容app端数据结构是json对象和json字符串)
+- 

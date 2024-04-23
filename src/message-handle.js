@@ -1,4 +1,4 @@
-import { dateFormat } from "./tool";
+import { dateFormat, parseJsonIfPossible } from "./tool";
 
 /* 根据消息类型获取文本内容
  * @param {*} message 当前消息
@@ -7,12 +7,12 @@ function getMessageText(message) {
   let text = "";
   if (message.msgType === messageType.MESSASG_TYPE_TEXT) {
     // 文本消息
-    text = JSON.parse(message?.content)?.text;
+    text = parseJsonIfPossible(message?.content)?.text;
   } else if (message.msgType === messageType.MESSASG_TYPE_AUDIO) {
     // 语音消息
     text =
       message.ext["mc:ext_json"] &&
-      JSON.parse(message.ext["mc:ext_json"]).audio_text;
+      parseJsonIfPossible(message.ext["mc:ext_json"]).audio_text;
   }
   // console.log("getMessageText", text);
   return text;
@@ -36,7 +36,7 @@ function getMessageType(message) {
     msgType = messageType.MESSASG_TYPE_TEXT;
   } else if (message.type === 10012) {
     // 自定义的多媒体消息
-    const msgContent = JSON.parse(message?.content);
+    const msgContent = parseJsonIfPossible(message?.content);
     if (msgContent.CustomMsgType === 10006) {
       // 语音消息
       msgType = messageType.MESSASG_TYPE_AUDIO;
@@ -54,8 +54,8 @@ function getMessageAudio(message) {
   const audio = {};
   if (message.msgType === messageType.MESSASG_TYPE_AUDIO) {
     // 语音消息
-    const extContent = JSON.parse(message.content);
-    const data = JSON.parse(extContent.Data);
+    const extContent = parseJsonIfPossible(message.content);
+    const data = parseJsonIfPossible(extContent.Data);
     audio.id = data.__files.media?.ext["s:file_ext_key_source_app_id"] || "";
     const duration = data.__files.media?.ext["s:file_ext_key_audio_duration"];
     audio.duration = duration;
@@ -68,7 +68,7 @@ function getMessageAudio(message) {
       audio.name = data.__files.media.ext["s:file_ext_key_vid"] || "";
     } else {
       audio.name = data.__files.media.ext["s:file_ext_key_file_name"] || "";
-      audio.audioText = JSON.parse(message.ext["mc:ext_json"]).audio_text;
+      audio.audioText = parseJsonIfPossible(message.ext["mc:ext_json"]).audio_text;
     }
   }
   // console.log("getMessageAudio audio", message, audio);
@@ -179,9 +179,12 @@ function businessMessageField(message) {
   if (message.property.like && message.property.like.length > 0) {
     message.likeType = message.property.like[0].value;
   }
+  console.log("message.likeType", message.likeType);
   message.audio = getMessageAudio(message);
+  console.log("message.audio", message.audio);
   const extContent =
-    message.ext["mc:ext_json"] && JSON.parse(message?.ext["mc:ext_json"]);
+    message.ext["mc:ext_json"] && parseJsonIfPossible(message?.ext["mc:ext_json"]);
+    console.log("message.ext", extContent);
   if (!extContent) return;
   message.subjectRecommendsList = extContent?.subject_recommends || [];
   message.messageType = extContent?.message_type; // 区分主动推荐还是用户聊天
