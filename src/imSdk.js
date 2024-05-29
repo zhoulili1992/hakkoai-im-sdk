@@ -354,7 +354,7 @@ class ImSdk {
       // 如果消息已存在，则更新消息
       // this.MESSAGES[index] = Object.assign(this.MESSAGES[index], message);
       // this.MESSAGES.splice(index, 1, Object.assign({}, this.MESSAGES[index], message));
-      this.MESSAGES.splice(this.MESSAGES[index], 1, message);
+      this.MESSAGES.splice(index, 1, message);
       console.log(
         "storeMessages 收到发送的消息啦index",
         index,

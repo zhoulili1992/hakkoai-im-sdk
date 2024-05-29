@@ -25,3 +25,6 @@
 - 优化消息是否存在-conversationShortId/conversationId同时兼容
 - 优化更新消息的方法(某些已读字段无法直接赋值,用新的代替旧数据)
 - 消息转化增加try-catch
+  
+#### v1.0.7
+- 优化更新消息的方法
