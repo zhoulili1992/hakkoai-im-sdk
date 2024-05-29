@@ -338,7 +338,7 @@ class ImSdk {
    */
 
   storeMessages(message) {
-    let flag = message.conversationShortId === this.conversation.shortId;
+    let flag = message.conversationShortId !== '0' ? message.conversationShortId === this.conversation.shortId : message.conversationId === this.conversation.id;
     console.log("%c storeMessages message", "color:red", message,message.conversationShortId,'this.conversation',this.conversation,this.conversation.shortId,'Is equal:',
     message.conversationShortId === this.conversation.shortId);
     if(!flag) return;
@@ -352,8 +352,9 @@ class ImSdk {
     );
     if (index !== -1) {
       // 如果消息已存在，则更新消息
-      this.MESSAGES[index] = Object.assign(this.MESSAGES[index], message);
-
+      // this.MESSAGES[index] = Object.assign(this.MESSAGES[index], message);
+      // this.MESSAGES.splice(index, 1, Object.assign({}, this.MESSAGES[index], message));
+      this.MESSAGES.splice(this.MESSAGES[index], 1, message);
       console.log(
         "storeMessages 收到发送的消息啦index",
         index,

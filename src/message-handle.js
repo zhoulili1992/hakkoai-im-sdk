@@ -172,26 +172,34 @@ function formatMessages(messages, hasMoreHistory, language) {
 
 // 格式化业务字段 方便使用
 function businessMessageField(message) {
-  message.msgType = getMessageType(message); // 消息的类型
-  message.text = getMessageText(message);
-  message.creatTime = dateFormat(message?.createdAt.valueOf());
-  message.likeType = "0";
-  if (message.property.like && message.property.like.length > 0) {
-    message.likeType = message.property.like[0].value;
-  }
-  console.log("message.likeType", message.likeType);
-  message.audio = getMessageAudio(message);
-  console.log("message.audio", message.audio);
-  const extContent =
-    message.ext["mc:ext_json"] && parseJsonIfPossible(message?.ext["mc:ext_json"]);
+  try {
+    message.msgType = getMessageType(message); // 消息的类型
+    message.text = getMessageText(message);
+    message.creatTime = dateFormat(message?.createdAt.valueOf());
+    message.likeType = "0";
+    if (message.property.like && message.property.like.length > 0) {
+      message.likeType = message.property.like[0].value;
+    }
+    console.log("message.likeType", message.likeType);
+    message.audio = getMessageAudio(message);
+    console.log("message.audio", message.audio);
+    const extContent =
+      message.ext["mc:ext_json"] &&
+      parseJsonIfPossible(message?.ext["mc:ext_json"]);
     console.log("message.ext", extContent);
-  if (!extContent) return;
-  message.subjectRecommendsList = extContent?.subject_recommends || [];
-  message.messageType = extContent?.message_type; // 区分主动推荐还是用户聊天
-  message.linkContent = extContent?.link_content;
-  message.chatTitle = extContent?.chat_title;
-  message.generationSource = extContent?.generation_source; //
-  // console.log("message", message);
+    if (!extContent) return;
+    message.subjectRecommendsList = extContent?.subject_recommends || [];
+    message.messageType = extContent?.message_type; // 区分主动推荐还是用户聊天
+    message.linkContent = extContent?.link_content;
+    message.chatTitle = extContent?.chat_title;
+    message.generationSource = extContent?.generation_source; //
+    message.cyberLanguage = extContent?.cyber_language; // 角色语言
+    message.cyberRoleName = extContent?.cyber_role_name; //角色名字
+    message.cyberTalkSpeed = extContent?.cyber_talk_speed; //角色语言速度
+  } catch (error) {
+    console.log("businessMessageField", error);
+  }
+  console.log("message", message);
 }
 
 function resetMessageState(message) {

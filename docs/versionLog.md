@@ -19,4 +19,9 @@
 
 #### v1.0.5
 - 增加parseJsonIfPossible方法(兼容app端数据结构是json对象和json字符串)
-- 
+
+#### v1.0.6
+- messsage增加角色相关字段(语言/名字/语速)
+- 优化消息是否存在-conversationShortId/conversationId同时兼容
+- 优化更新消息的方法(某些已读字段无法直接赋值,用新的代替旧数据)
+- 消息转化增加try-catch
