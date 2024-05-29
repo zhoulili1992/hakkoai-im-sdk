@@ -142,6 +142,7 @@ function resetMessageLast(messages) {
   messages.forEach((message) => {
     message.isLast = false;
   });
+  messages[messages.length - 1].isLast = true;
 }
 
 /**
