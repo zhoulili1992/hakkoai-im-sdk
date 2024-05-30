@@ -343,7 +343,7 @@ class ImSdk {
     message.conversationShortId === this.conversation.shortId);
     if(!flag) return;
     const prevMessage = this.MESSAGES[this.MESSAGES.length - 1];
-    message.time = whetherShowMessageTime(message, prevMessage, this.language);
+    console.log('prevMessage===',prevMessage,'this.MESSAGES[this.MESSAGES.length - 1]===',this.MESSAGES[this.MESSAGES.length - 1],'this.MESSAGES',this.MESSAGES,'this.MESSAGES.length - 1',this.MESSAGES.length - 1);
     businessMessageField(message);
     const index = this.MESSAGES.findIndex((m) =>
       m.serverId
@@ -375,6 +375,7 @@ class ImSdk {
     } else {
       // 新发送的发送中的消息  or 接收的新消息
       this.MESSAGES.push(message);
+      message.time = whetherShowMessageTime(message, prevMessage, this.language);
       resetMessageLast(this.MESSAGES);
       console.log(
         "storeMessages 收到新消息啦index",
