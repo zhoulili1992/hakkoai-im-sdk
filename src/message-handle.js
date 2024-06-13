@@ -197,6 +197,7 @@ function businessMessageField(message) {
     message.cyberLanguage = extContent?.cyber_language; // 角色语言
     message.cyberRoleName = extContent?.cyber_role_name; //角色名字
     message.cyberTalkSpeed = extContent?.cyber_talk_speed; //角色语言速度
+    message.subjectForceRefresh = extContent?.subject_force_refresh; // 是否强制刷新话题 str 0 不强制刷新 1 强制刷新
   } catch (error) {
     console.log("businessMessageField", error);
   }
